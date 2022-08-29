@@ -1,3 +1,9 @@
 jtl:
   judge:
     baseurl: http://localhost:2358
+  mysql:
+    host: localhost
+    port: 3306
+    database: jtldb
+    username: jtl
+    password: jtlpassword
