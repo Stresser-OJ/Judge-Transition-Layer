@@ -21,11 +21,20 @@ repositories {
 }
 
 dependencies {
+    implementation("org.jetbrains.kotlin:kotlin-reflect")
+
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor")
     implementation("io.projectreactor.kotlin:reactor-kotlin-extensions")
     implementation("org.springframework.boot:spring-boot-starter-webflux")
 
+    implementation("org.springframework.boot:spring-boot-starter-data-r2dbc")
+
+    implementation("dev.miku:r2dbc-mysql:0.8.2.RELEASE")
+    implementation("org.flywaydb:flyway-core")
+
     testImplementation(kotlin("test"))
+    testImplementation("org.springframework.boot:spring-boot-starter-test")
+    testImplementation("io.projectreactor:reactor-test")
 }
 
 tasks.test {
