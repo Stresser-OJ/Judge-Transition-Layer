@@ -1,7 +1,5 @@
 package com.chosanglyul.jtl.scoring
 
-import com.chosanglyul.jtl.client.ClientSubmissionAddRequest
-import com.chosanglyul.jtl.client.Judge0Client
 import com.chosanglyul.jtl.repository.Problem
 import com.chosanglyul.jtl.repository.ProblemRepository
 import org.springframework.validation.annotation.Validated
@@ -33,9 +31,7 @@ class ScoringController(
     }
 
     @GetMapping("/problems")
-    fun getProblems(
-
-    ): Flux<Problem> {
+    fun getProblems(): Flux<Problem> {
         return problemRepository.findAll()
     }
 }

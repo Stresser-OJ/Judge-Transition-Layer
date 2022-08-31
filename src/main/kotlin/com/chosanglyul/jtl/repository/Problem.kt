@@ -4,7 +4,13 @@ import org.springframework.data.annotation.Id
 import org.springframework.data.relational.core.mapping.Table
 
 @Table("problem")
-class Problem {
+class Problem(
     @Id
-    var id: Long? = null
-}
+    var id: Long? = null,
+
+    var timeLimit: Float,
+
+    var memoryLimit: Float,
+
+    val descriptionId: Long,
+)
