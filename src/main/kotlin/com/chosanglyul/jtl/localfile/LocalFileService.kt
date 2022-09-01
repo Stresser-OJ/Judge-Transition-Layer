@@ -42,15 +42,13 @@ class LocalFileService(
         }
         return Mono.zip(repoQuery, fileMono).map { info ->
             Files.write(dirPath.resolve(info.t1.uuid), info.t2.text.toByteArray())
-            info
-        }.flatMap { info ->
-            fileRepository.save(
-                File(
-                    id = info.t1.id,
-                    uuid = info.t1.uuid,
-                    name = info.t2.name,
-                )
+            File(
+                id = info.t1.id,
+                uuid = info.t1.uuid,
+                name = info.t2.name,
             )
+        }.flatMap { file ->
+            fileRepository.save(file)
         }.map { file ->
             file.id!!
         }
