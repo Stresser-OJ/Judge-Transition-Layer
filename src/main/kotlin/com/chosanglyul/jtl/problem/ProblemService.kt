@@ -15,11 +15,9 @@ class ProblemService(
 ) {
     fun makeProblem(makeProblemRequest: MakeProblemRequest): Mono<Long> {
         return localFileService.newFile(
-            Mono.just(
-                FileRaw(
-                    name = makeProblemRequest.name + "_description",
-                    text = "",
-                )
+            FileRaw(
+                name = makeProblemRequest.name + "_description",
+                text = "",
             )
         ).map { descriptionId ->
             Problem(
