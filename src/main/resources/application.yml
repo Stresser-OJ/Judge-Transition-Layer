@@ -7,3 +7,4 @@ jtl:
     database: jtldb
     username: jtl
     password: jtlpassword
+  dirpath: ~/JTL-Files
