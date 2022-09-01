@@ -40,7 +40,10 @@ class LocalFileService(
         val repoQuery = fileIdMono.flatMap { fileId ->
             fileRepository.findById(fileId)
         }
-        return Mono.zip(repoQuery, fileMono).flatMap { info ->
+        return Mono.zip(repoQuery, fileMono).map { info ->
+            Files.write(dirPath.resolve(info.t1.uuid), info.t2.text.toByteArray())
+            info
+        }.flatMap { info ->
             fileRepository.save(
                 File(
                     id = info.t1.id,
