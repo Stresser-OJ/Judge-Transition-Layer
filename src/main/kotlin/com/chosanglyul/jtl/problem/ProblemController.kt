@@ -18,7 +18,7 @@ class ProblemController(
     fun makeProblem(
         @RequestBody @Validated makeProblemRequest: MakeProblemRequest,
     ): Mono<Long> {
-        return problemService.makeProblem(Mono.just(makeProblemRequest))
+        return problemService.makeProblem(makeProblemRequest)
     }
 
     @GetMapping("/problems")
@@ -30,6 +30,6 @@ class ProblemController(
     fun getProblem(
         @PathVariable("id") @Validated problemId: Long,
     ): Mono<Problem> {
-        return problemService.getProblemById(Mono.just(problemId))
+        return problemService.getProblemById(problemId)
     }
 }

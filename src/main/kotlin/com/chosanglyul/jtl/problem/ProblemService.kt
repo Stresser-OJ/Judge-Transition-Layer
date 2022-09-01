@@ -13,20 +13,19 @@ class ProblemService(
     private val problemRepository: ProblemRepository,
     private val localFileService: LocalFileService,
 ) {
-    fun makeProblem(makeProblemRequest: Mono<MakeProblemRequest>): Mono<Long> {
-        val descriptionId = localFileService.newFile(
-            makeProblemRequest.map { req ->
+    fun makeProblem(makeProblemRequest: MakeProblemRequest): Mono<Long> {
+        return localFileService.newFile(
+            Mono.just(
                 FileRaw(
-                    name = req.name + "_description",
+                    name = makeProblemRequest.name + "_description",
                     text = "",
                 )
-            }
-        )
-        return Mono.zip(makeProblemRequest, descriptionId).map { info ->
+            )
+        ).map { descriptionId ->
             Problem(
-                timeLimit = info.t1.timeLimit,
-                memoryLimit = info.t1.memoryLimit,
-                descriptionId = info.t2,
+                timeLimit = makeProblemRequest.timeLimit,
+                memoryLimit = makeProblemRequest.memoryLimit,
+                descriptionId = descriptionId,
             )
         }.flatMap { problem ->
             problemRepository.save(problem)
@@ -39,9 +38,7 @@ class ProblemService(
         return problemRepository.findAll()
     }
 
-    fun getProblemById(idMono: Mono<Long>): Mono<Problem> {
-        return idMono.flatMap { id ->
-            problemRepository.findById(id)
-        }
+    fun getProblemById(id: Long): Mono<Problem> {
+        return problemRepository.findById(id)
     }
 }
