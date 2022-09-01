@@ -19,33 +19,26 @@ class LocalFileService(
     // TODO Efficient Async File IO
     private val dirPath = Paths.get(dirPathString)
 
-    fun newFile(fileRawMono: Mono<FileRaw>): Mono<Long> {
-        return fileRawMono.map { file ->
-            val uuid = UUID.randomUUID().toString()
-            Files.write(dirPath.resolve(uuid), file.text.toByteArray())
-            Pair(file, uuid)
-        }.flatMap { info ->
-            fileRepository.save(
-                File(
-                    uuid = info.second,
-                    name = info.first.name,
-                )
+    fun newFile(fileRaw: FileRaw): Mono<Long> {
+        val uuid = UUID.randomUUID().toString()
+        Files.write(dirPath.resolve(uuid), fileRaw.text.toByteArray())
+        return fileRepository.save(
+            File(
+                uuid = uuid,
+                name = fileRaw.name,
             )
-        }.map { file ->
+        ).map { file ->
             file.id!!
         }
     }
 
-    fun editFile(fileIdMono: Mono<Long>, fileMono: Mono<FileRaw>): Mono<Long> {
-        val repoQuery = fileIdMono.flatMap { fileId ->
-            fileRepository.findById(fileId)
-        }
-        return Mono.zip(repoQuery, fileMono).map { info ->
-            Files.write(dirPath.resolve(info.t1.uuid), info.t2.text.toByteArray())
+    fun editFile(fileId: Long, fileRaw: FileRaw): Mono<Long> {
+        return fileRepository.findById(fileId).map { file ->
+            Files.write(dirPath.resolve(file.uuid), fileRaw.text.toByteArray())
             File(
-                id = info.t1.id,
-                uuid = info.t1.uuid,
-                name = info.t2.name,
+                id = file.id,
+                uuid = file.uuid,
+                name = fileRaw.name,
             )
         }.flatMap { file ->
             fileRepository.save(file)
@@ -54,10 +47,8 @@ class LocalFileService(
         }
     }
 
-    fun loadFile(fileIdMono: Mono<Long>): Mono<FileRaw> {
-        val repoQuery = fileIdMono.flatMap { fileId ->
-            fileRepository.findById(fileId)
-        }
+    fun loadFile(fileId: Long): Mono<FileRaw> {
+        val repoQuery = fileRepository.findById(fileId)
         val streams = repoQuery.map { file ->
             Files.lines(dirPath.resolve(file.uuid))
         }.flatMap { stream ->
