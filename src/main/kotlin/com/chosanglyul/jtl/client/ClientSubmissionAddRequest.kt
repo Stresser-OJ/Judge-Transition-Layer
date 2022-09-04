@@ -1,10 +1,23 @@
 package com.chosanglyul.jtl.client
 
+import com.fasterxml.jackson.annotation.JsonProperty
+
 data class ClientSubmissionAddRequest(
-    val source_code: String,
-    val language_id: Long,
+    @JsonProperty("source_code")
+    val sourceCode: String,
+
+    @JsonProperty("language_id")
+    val languageId: Long,
+
+    @JsonProperty("stdin")
     val stdin: String? = null,
-    val expected_output: String? = null,
-    val cpu_time_limit: Float,
-    val memory_limit: Float,
+
+    @JsonProperty("expected_output")
+    val expectedOutput: String? = null,
+
+    @JsonProperty("cpu_time_limit")
+    val cpuTimeLimit: Float,
+
+    @JsonProperty("memory_limit")
+    val memoryLimit: Float,
 )
